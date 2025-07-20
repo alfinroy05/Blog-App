@@ -10,6 +10,39 @@ let app=Express()
 app.use(Express.json())
 app.use(Cors())
 Mongoose.connect("mongodb+srv://alfinroy2005:alfin123@cluster0.lrsqrhp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+//sign in
+app.post("/signin",async(req,res)=>{
+let input=req.body
+let result=userModel.find({email:input.email}).then((items)=>{
+    if (items.length>0) {
+        const passwordValidator=Bcrypt.compareSync(input.password,items[0].password)
+        if (passwordValidator) {
+            //token creation
+            Jwt.sign({email:input.email},"Blog App",{expiresIn:"1d"},
+                (error,token)=>{
+                    if (error) {
+                        res.json({"status":"error in token generation"})
+                        
+                    } else {
+                        res.json({"status":"success","token":token,"user id":items[0]._id})
+                    }
+                }
+
+            )
+            //token invalid
+        }
+        else{
+            res.json({"status":"invalid password"})
+        }
+            
+    }    
+    else {
+        res.json({"status":"invalid e mail id"})
+    }
+}).catch()
+
+})
+//sign up
 app.post("/signup",async(req,res)=>{
     let data=req.body
     let hashedPassword=Bcrypt.hashSync(data.password,10)
