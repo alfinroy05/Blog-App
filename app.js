@@ -5,11 +5,12 @@ const Bcrypt=require("bcrypt")
 const Jwt=require("jsonwebtoken")
 const UserModel=require("./models/users")
 const userModel = require("./models/users")
+const postModel = require("./models/posts")
 
 let app=Express()
 app.use(Express.json())
 app.use(Cors())
-Mongoose.connect("mongodb+srv://alfinroy2005:alfin123@cluster0.lrsqrhp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+Mongoose.connect("mongodb+srv://alfinroy2005:alfin123@cluster0.lrsqrhp.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0")
 //sign in
 app.post("/signin",async(req,res)=>{
 let input=req.body
@@ -25,6 +26,7 @@ let result=userModel.find({email:input.email}).then((items)=>{
                         
                     } else {
                         res.json({"status":"success","token":token,"user id":items[0]._id})
+                        
                     }
                 }
 
@@ -67,6 +69,24 @@ app.post("/signup",async(req,res)=>{
     ).catch()
     
 })
+//create a post
+app.post("/create",async(req,res)=>{
+    let input=req.body
+    let token= req.headers.token
+    Jwt.verify(token,"Blog App",async (error,decoded)=>{
+        if(decoded)
+        {
+            let result=new postModel(input)
+            await result.save()
+            res.json({"status":"success"})
+        }
+        else{
+            res.json({"status":"invalid token Authentication"})
+        }
+    })
+})
+
+
 
 
 
