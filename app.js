@@ -74,7 +74,7 @@ app.post("/create",async(req,res)=>{
     let input=req.body
     let token= req.headers.token
     Jwt.verify(token,"Blog App",async (error,decoded)=>{
-        if(decoded)
+        if(decoded && decoded.email)
         {
             let result=new postModel(input)
             await result.save()
