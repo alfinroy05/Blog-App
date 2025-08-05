@@ -3,7 +3,10 @@ const postSchema=mongoose.Schema({
     userId:{type: mongoose.Schema.Types.ObjectId,
         ref:"users"
     },
-    Message:String,
+      message: {
+    type: String,
+    required: true
+  },
     postedDate:{type: Date,
         default:Date.now}
 }

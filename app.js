@@ -25,7 +25,7 @@ app.post("/signin", async (req, res) => {
                             res.json({ "status": "error in token generation" })
 
                         } else {
-                            res.json({ "status": "success", "token": token, "user id": items[0]._id })
+                            res.json({ "status": "success", "token": token, "userId": items[0]._id })
 
                         }
                     }
